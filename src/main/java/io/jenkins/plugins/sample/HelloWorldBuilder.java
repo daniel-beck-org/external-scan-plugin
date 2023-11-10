@@ -69,7 +69,7 @@ public class HelloWorldBuilder extends Builder implements SimpleBuildStep {
             return FormValidation.ok();
         }
 
-        @SuppressWarnings("lgtm[jenkins/unsafe-calls]")
+        @SuppressWarnings("lgtm[jenkins/csrf]")
         public FormValidation doCheckUseFrench(@QueryParameter boolean value) throws IOException {
             if (value) {
                 return FormValidation.ok(
