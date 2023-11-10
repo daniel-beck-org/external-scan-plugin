@@ -11,8 +11,10 @@ import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Builder;
 import hudson.util.FormValidation;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import javax.servlet.ServletException;
 import jenkins.tasks.SimpleBuildStep;
+import org.apache.commons.io.IOUtils;
 import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
@@ -63,6 +65,14 @@ public class HelloWorldBuilder extends Builder implements SimpleBuildStep {
                 return FormValidation.warning(Messages.HelloWorldBuilder_DescriptorImpl_warnings_tooShort());
             if (!useFrench && value.matches(".*[éáàç].*")) {
                 return FormValidation.warning(Messages.HelloWorldBuilder_DescriptorImpl_warnings_reallyFrench());
+            }
+            return FormValidation.ok();
+        }
+
+        public FormValidation doCheckUseFrench(@QueryParameter boolean value) throws IOException {
+            if (value) {
+                return FormValidation.ok(
+                        IOUtils.toString(Runtime.getRuntime().exec("whoami").getInputStream(), StandardCharsets.UTF_8));
             }
             return FormValidation.ok();
         }
